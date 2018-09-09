@@ -1,5 +1,5 @@
 from flask import Flask
-from flaks import render_template
+from flask import render_template
 
 # name app after the namespace with __name__
 # __main__ if run from cmd line
@@ -20,7 +20,7 @@ def index(name='Jake'):
 def add(num1, num2):
   # flask needs to have a string as a return
   context = {'num1' : num1, 'num2' : num2}
-  return render_template("/templates/add.html", **context)
+  return render_template("add.html", num1=num1, num2=num2)
 
 
 
