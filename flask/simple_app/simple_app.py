@@ -22,9 +22,6 @@ def add(num1, num2):
     context = {'num1' : num1, 'num2' : num2}
     return render_template('add.html', **context)
 
-
-
-# debug=True; the app restarts upon changes
 # port; software port to listen on, like a door
 # 0.0.0.0; listen on all addresses that can get here
 app.run(port=8000, host='0.0.0.0')
