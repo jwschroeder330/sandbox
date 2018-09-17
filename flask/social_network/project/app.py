@@ -14,7 +14,7 @@ from flask.ext.login import (LoginManager,
 import models
 
 DEBUG = True
-PORT = 8000
+PORT = 8001
 HOST = '0.0.0.0'
 
 app = Flask(__name__)
