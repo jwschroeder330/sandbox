@@ -9,12 +9,13 @@ from flask.ext.bcrypt import check_password_hash
 from flask.ext.login import (LoginManager,
                             login_user, #logs in user
                             logout_user,
-                            login_required)
+                            login_required,
+                            current_user)
 
 import models
 
 DEBUG = True
-PORT = 8001
+PORT = 8000
 HOST = '0.0.0.0'
 
 app = Flask(__name__)
@@ -38,6 +39,7 @@ def before_request():
     """Connect to the database before each request."""
     g.db = models.DATABASE # set the database as global
     g.db.connect() # ensure a global db connection
+    g.user = current_user  # an object that will find the current user
 
 @app.after_request
 def after_request(response):
@@ -90,6 +92,19 @@ def logout():
 @app.route('/')
 def index():
     return("Index")
+
+@app.route('/new_post', methods=('GET', 'POST'))
+@login_required
+def post():
+    form = forms.PostForm()
+    if form.validate_on_submit():
+        models.Post.create(
+        # g.user is our global user object, which we must get
+        user=g.user._get_current_object(),
+        content=form.content.data.strip())
+        flash("Message posted! Thanks!", "success")
+        return redirect(url_for('index'))
+    return render_template('post.html', form=form)
 
 
 if __name__ == '__main__':
