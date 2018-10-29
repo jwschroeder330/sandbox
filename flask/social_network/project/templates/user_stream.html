@@ -12,15 +12,27 @@
     </div>
     <div class="grid-33">
       <h5>Followers</h5>
-      <p>0</p>
+      <p>{{ user.followers().count() }}</p>
     </div>
     <div class="grid-33">
       <h5>Following</h5>
-      <p>0</p>
+      <p>{{ user.following().count() }}</p>
     </div>
   </div>
   <div class="grid-25">
-    <!-- Follow/unfollow button -->
+    <!-- Make sure user is logged in -->
+    {% if current_user.is_authenticated %}
+        <!-- Make sure we are not looking at the user that is logged in -->
+        {% if user != current_user %}
+          <!-- Make sure the user is not already being followed by the user that is logged in -->
+          {% if not user in current_user.following() %}
+            <a href="{{ url_for('follow', username=user.username) }}" class="small">Follow</a>
+          <!-- If they are already following, give them the option to unfollow -->
+          {% else %}
+            <a href="{{ url_for('unfollow', username=user.username) }}" class="small">Unfollow</a>
+          {% endif %}
+        {% endif %}
+    {% endif %}
   </div>
 </div>
 <!-- Call the content from the extended template, stream -->

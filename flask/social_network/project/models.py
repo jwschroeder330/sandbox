@@ -26,8 +26,39 @@ Model):
 
     def get_stream(self):
         return Post.select().where(
+        # either users i am following or posts that are mine
+        (Post.user << self.following()) |
         (Post.user == self)
         )
+
+    def following(self):
+        """
+            The users that we are following.
+        """
+        return (
+            User.select().join(
+                # table we are selecting
+                Relationship,
+                # how we aer joining data
+                on=Relationship.to_user
+            ).where(
+                # where the from_user == me
+                Relationship.from_user == self
+            )
+        )
+
+    def followers(self):
+        """
+            Get users following the current user.
+        """
+        return (
+            User.select().join(
+                Relationship,
+                on=Relationship.from_user
+            ).where(
+                # the opposite of following
+                Relationship.to_user == self
+            ))
 
     # cls instead of self: we do not have to create a user instance to use a user method
     @classmethod # method that belongs to a class, that can create the class it belongs to
@@ -43,9 +74,27 @@ Model):
         except IntegrityError: # if username or email are not unique
             raise ValueError("User already exists")
 
+
+class Relationship(Model):
+    # People who are related to me
+    from_user = ForeignKeyField(User, related_name='relationships')
+    # People I am related to
+    to_user = ForeignKeyField(User, related_name='related_to')
+
+    class Meta:
+        database = DATABASE
+        # how to find data, and if the index is unique?
+        indexes = (
+            # two fields in index
+            (('from_user', 'to_user'),
+            # whether index is unique or not
+            True),)
+            # NOTE: notice the trailing commas after the first tuple - nested tuples
+
+
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Post], safe=True)
+    DATABASE.create_tables([User, Post, Relationship], safe=True)
     DATABASE.close()
 
 
