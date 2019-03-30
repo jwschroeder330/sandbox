@@ -13,12 +13,11 @@ class Token {
 	 *
 	 */
 	drawHTMLToken() {
-		let div = document.createElement('div');
-		div.setAttribute('id') = this.id;
-		div.setAttribute('class') = 'token';
-		div.setAttribute('background-color') = this.owner.color;
-		document.getElementById('game-board-underlay').appendChild(div);
-		return div;
+		let token = document.createElement('div');
+		document.getElementById('game-board-underlay').appendChild(token);
+		token.setAttribute('id', this.id);
+		token.setAttribute('class', 'token');
+		token.setAttribute('background-color', this.owner.color);
 	}
 	/*
 	 *

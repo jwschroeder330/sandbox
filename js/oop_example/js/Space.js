@@ -15,7 +15,7 @@ class Space {
 		this.id = 'space-${x}-${y}';
 		this.token = null;
 		this.diameter = 76;
-		this.radius = (diameter / 2);
+		this.radius = (this.diameter / 2);
 	}
 	/*
 	 * Create an SVG and style it to meet the visual needs of the game

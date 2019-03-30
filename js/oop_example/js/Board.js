@@ -34,5 +34,10 @@ class Board {
 				this.spaces[x][y].drawSVGSpace();
 			}
 		}
+		//for(let column of this.spaces){
+		//	for(let space of column) {
+		//		space.drawSVGSpace();
+		//	}
+		//}
 	}
 }
